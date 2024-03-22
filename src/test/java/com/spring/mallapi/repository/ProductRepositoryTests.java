@@ -15,6 +15,8 @@ import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.mallapi.domain.Product;
+import com.spring.mallapi.dto.ProductDTO;
+import com.spring.mallapi.service.ProductService;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -24,6 +26,9 @@ public class ProductRepositoryTests {
 
 	@Autowired
 	ProductRepository productRepository;
+	
+	@Autowired
+	ProductService productService;
 	
 //	@Test
 //	public void testInsert() {
@@ -96,15 +101,45 @@ public class ProductRepositoryTests {
 //		productRepository.save(product);
 //	}
 	
+//	@Test
+//	public void testList() {
+//		
+//		Pageable pageable = PageRequest.of(0, 10, Sort.by("pno").descending());
+//		
+//		Page<Object[]> result = productRepository.selectList(pageable);
+//		
+//		result.getContent().forEach(arr -> log.info(Arrays.toString(arr)));
+//		
+//	}
+	
+//	@Test
+//	public void testRegister() {
+//		
+//		ProductDTO productDTO = ProductDTO.builder()
+//				.pname("새로운 상품")
+//				.pdesc("신규추가상품")
+//				.price(1000)
+//				.build();
+//		
+//		//UUID 필요
+//		productDTO.setUploadFiledNames(
+//				java.util.List.of(
+//						UUID.randomUUID()+"_"+"TEST1.jpg",
+//						UUID.randomUUID()+"_"+"TEST2.jpg"
+//						)
+//				);
+//		productService.register(productDTO);
+//	}
+	
 	@Test
-	public void testList() {
+	public void testRead() {
+		//실제 존재하는 번호로 테스트
+		Long pno = 12L;
 		
-		Pageable pageable = PageRequest.of(0, 10, Sort.by("pno").descending());
+		ProductDTO productDTO = productService.get(pno);
 		
-		Page<Object[]> result = productRepository.selectList(pageable);
-		
-		result.getContent().forEach(arr -> log.info(Arrays.toString(arr)));
-		
+		log.info(productDTO);
+		log.info(productDTO.getUploadFiledNames());
 	}
 	
 }
