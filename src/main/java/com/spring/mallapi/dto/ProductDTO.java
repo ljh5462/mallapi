@@ -24,5 +24,5 @@ public class ProductDTO {
 
 	private List<MultipartFile> files = new ArrayList<>();
 	
-	private List<String> uploadFiledNames = new ArrayList<>();
+	private List<String> uploadFileNames = new ArrayList<>();
 }

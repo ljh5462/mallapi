@@ -122,7 +122,7 @@ public class ProductRepositoryTests {
 //				.build();
 //		
 //		//UUID 필요
-//		productDTO.setUploadFiledNames(
+//		productDTO.setUploadFileNames(
 //				java.util.List.of(
 //						UUID.randomUUID()+"_"+"TEST1.jpg",
 //						UUID.randomUUID()+"_"+"TEST2.jpg"
@@ -139,7 +139,7 @@ public class ProductRepositoryTests {
 		ProductDTO productDTO = productService.get(pno);
 		
 		log.info(productDTO);
-		log.info(productDTO.getUploadFiledNames());
+		log.info(productDTO.getUploadFileNames());
 	}
 	
 }

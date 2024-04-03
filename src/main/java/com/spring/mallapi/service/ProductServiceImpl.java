@@ -55,7 +55,7 @@ public class ProductServiceImpl implements ProductService{
 					.build();
 			
 			String imageStr = productImage.getFileName();
-			productDTO.setUploadFiledNames(List.of(imageStr));
+			productDTO.setUploadFileNames(List.of(imageStr));
 			
 			return productDTO;
 		}).collect(Collectors.toList());
@@ -85,7 +85,7 @@ public class ProductServiceImpl implements ProductService{
 				.build();
 				
 		//업로드 처리가 끝난 파일들의 이름 리스트
-		List<String> uploadFileNames = productDTO.getUploadFiledNames();
+		List<String> uploadFileNames = productDTO.getUploadFileNames();
 		
 		if(uploadFileNames == null) {
 			return product;
@@ -123,7 +123,7 @@ public class ProductServiceImpl implements ProductService{
 		
 		List<String> fileNameList = imageList.stream().map(productImage -> productImage.getFileName()).toList();
 		
-		productDTO.setUploadFiledNames(fileNameList);
+		productDTO.setUploadFileNames(fileNameList);
 		
 		return productDTO;
 	}
@@ -143,7 +143,7 @@ public class ProductServiceImpl implements ProductService{
 		//upload file -- clear first
 		product.clearList();
 		
-		List<String> uploadFileNames = productDTO.getUploadFiledNames();
+		List<String> uploadFileNames = productDTO.getUploadFileNames();
 		
 		if(uploadFileNames != null & uploadFileNames.size() > 0) {
 			uploadFileNames.stream().forEach(uploadName -> {
