@@ -2,6 +2,7 @@ package com.spring.mallapi.controller;
 
 import java.util.Map;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +35,7 @@ public class TodoController {
 			return service.get(tno);
 		}
 		
+		@PreAuthorize("hasAnyRole('ROLE_USER')") // 임시로 권한 설정
 		@GetMapping("list")
 		public PageResponseDTO<TodoDTO> list(PageRequestDTO pageRequestDTO) {
 			log.info(pageRequestDTO);
