@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.spring.mallapi.domain.Product;
 import com.spring.mallapi.dto.PageRequestDTO;
 import com.spring.mallapi.dto.PageResponseDTO;
 import com.spring.mallapi.dto.ProductDTO;
@@ -26,8 +25,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 
 @RestController
@@ -67,11 +64,10 @@ public class ProductController {
 	}
 	
 	//@PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')") // 임시로 권한 설정
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN')") // 임시로 권한 설정
+	@PreAuthorize("hasAnyRole('ROLE_USER')") // 임시로 권한 설정
 	@GetMapping("/list")
 	public PageResponseDTO<ProductDTO> list(PageRequestDTO pageRequestDTO) {
-		log.info("list..................." + pageRequestDTO);
-		
+		log.info("list..................." + pageRequestDTO);		
 		return productService.getList(pageRequestDTO);
 	}
 	
