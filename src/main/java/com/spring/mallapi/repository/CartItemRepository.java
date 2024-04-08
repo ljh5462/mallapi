@@ -29,7 +29,7 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long>{
 	"	CartItem ci inner join Cart c on ci.cart = c " +		
 	"	where " +		
 	"	c.owner.email = :email and ci.product.pno = :pno ")
-	public CartItem getItemFromPno(@Param("email") String email, @Param("pno") Long pno);
+	public CartItem getItemOfPno(@Param("email") String email, @Param("pno") Long pno);
 	
 	@Query("select " +
 	"	c.cno " +

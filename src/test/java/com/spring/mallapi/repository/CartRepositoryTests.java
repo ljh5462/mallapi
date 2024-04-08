@@ -40,7 +40,7 @@ public class CartRepositoryTests {
 //		
 //		//만일 기존에 사용자의 장바구니 아이템이 있었다면
 //		
-//		CartItem cartItem = cartItemRepository.getItemFromPno(email, pno);
+//		CartItem cartItem = cartItemRepository.getItemOfPno(email, pno);
 //		
 //		if(cartItem != null) {
 //			cartItem.changeQty(qty);
