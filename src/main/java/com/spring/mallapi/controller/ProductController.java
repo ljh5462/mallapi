@@ -63,7 +63,7 @@ public class ProductController {
 		return fileUtil.getFile(fileName);
 	}
 	
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN')") // 임시로 권한 설정
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')") // 임시로 권한 설정
 	@GetMapping("/list")
 	public PageResponseDTO<ProductDTO> list(PageRequestDTO pageRequestDTO) {
 		log.info("list..................." + pageRequestDTO);		
