@@ -6,7 +6,7 @@ import com.spring.mallapi.dto.YoutubeDTO;
 
 public interface YoutubeService {
 	
-	public YoutubeDTO getVideoInfo(String url);
+	public YoutubeDTO getVideoOne(String url);
 	
-	public List<YoutubeDTO> getLiveList(String channelId);
+	public List<YoutubeDTO> getUpcomingLiveList(String channelId);
 }

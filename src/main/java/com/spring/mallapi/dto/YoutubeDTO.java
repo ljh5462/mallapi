@@ -28,6 +28,5 @@ public class YoutubeDTO {
 	private String actualStartTime; // 방송시작시간
 	private String actualEndTime; // 방송종료시간
 	private String scheduledStartTime; // 방송예정시간
-	private List<String> tags; // 태그
 	
 }

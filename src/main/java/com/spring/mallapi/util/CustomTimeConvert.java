@@ -51,7 +51,7 @@ public class CustomTimeConvert {
         long seconds = dur.getSeconds() % 60;
 
         // Format the duration string as "HH:MM:SS"
-        String formattedDuration = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        String formattedDuration = String.format("%d:%02d:%02d", hours, minutes, seconds);
 
         return formattedDuration;
     }

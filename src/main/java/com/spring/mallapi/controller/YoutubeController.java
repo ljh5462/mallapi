@@ -27,13 +27,13 @@ public class YoutubeController {
 	@ResponseBody
 	@PostMapping("/getInfo")
 	public YoutubeDTO getInfo(@RequestParam("url") String url ){
-		return youtubeService.getVideoInfo(url);
+		return youtubeService.getVideoOne(url);
 	}
 	
 
 	@ResponseBody
-	@PostMapping("/getLiveList")
+	@PostMapping("/getUpcomingLiveList")
 	public List<YoutubeDTO> getLiveList(@RequestParam("channelId") String channelId){
-		return youtubeService.getLiveList(channelId);
+		return youtubeService.getUpcomingLiveList(channelId);
 	}
 }
