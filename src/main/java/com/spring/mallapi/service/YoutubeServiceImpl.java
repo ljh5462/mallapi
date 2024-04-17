@@ -1,6 +1,7 @@
 package com.spring.mallapi.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,10 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.model.ResourceId;
+import com.google.api.services.youtube.model.SearchListResponse;
+import com.google.api.services.youtube.model.SearchResult;
+import com.google.api.services.youtube.model.SearchResultSnippet;
 import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoListResponse;
 import com.google.api.services.youtube.model.VideoLiveStreamingDetails;
@@ -117,6 +122,70 @@ public class YoutubeServiceImpl implements YoutubeService{
             	YoutubeDTO youtubeDTO = new YoutubeDTO();
             	return youtubeDTO;
             }
+
+        } catch (GoogleJsonResponseException e) {
+            System.err.println("There was a service error: " + e.getDetails().getCode() + " : "
+                    + e.getDetails().getMessage());
+        } catch (IOException e) {
+            System.err.println("There was an IO error: " + e.getCause() + " : " + e.getMessage());
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+
+        return null;
+	}
+	
+	//채널id로 실시간, 대기중인 동영상 조회
+	public List<YoutubeDTO> getLiveList(String channelId){
+		
+		try{
+			
+	        youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, new HttpRequestInitializer() {
+	            public void initialize(HttpRequest request) throws IOException {}
+	        }).setApplicationName("youtube-cmdline-search-sample").build();
+	
+	        YouTube.Search.List search = youtube.search().list("snippet");
+	
+	        search.setKey(apiKey);
+	        search.setChannelId(channelId);
+	        search.setEventType("live");
+	        search.setPart("id,snippet");
+	        search.setType("video");
+	
+	        SearchListResponse searchListResponse = search.execute();
+	        
+	        search.setEventType("upcoming");
+	        
+	        SearchListResponse searchListResponse2 = search.execute();
+	        
+	        List<SearchResult> searchList = searchListResponse.getItems();
+	        List<SearchResult> searchList2 = searchListResponse2.getItems();
+	        
+	        List<SearchResult> combinedList = new ArrayList<>(searchList);
+	        combinedList.addAll(searchList2);
+	        
+	        List<YoutubeDTO> result = new ArrayList<>();
+	        
+	        for(SearchResult v : combinedList) {
+	        	
+	        	ResourceId rs = v.getId();
+	        	SearchResultSnippet srs = v.getSnippet();
+	        	
+	        	YoutubeDTO youtubeDTO = YoutubeDTO.builder()
+	        			.id(rs.getVideoId())
+	        			.title(srs.getTitle())
+	        			.publishedAt(customTimeConvert.convertTimestampToCurrentDate(srs.getPublishedAt()))
+	        			.description(srs.getDescription())
+	        			.channelId(srs.getChannelId())
+	        			.channelTitle(srs.getChannelTitle())
+	        			.liveBroadcastContent(srs.getLiveBroadcastContent())
+	        			.thumbnail(srs.getThumbnails().getMaxres())
+	        			.build();
+	        	
+	        	result.add(youtubeDTO);
+	        }
+	        
+	        return result;
 
         } catch (GoogleJsonResponseException e) {
             System.err.println("There was a service error: " + e.getDetails().getCode() + " : "

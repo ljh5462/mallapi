@@ -26,9 +26,14 @@ public class YoutubeController {
 	
 	@ResponseBody
 	@PostMapping("/getInfo")
-	public YoutubeDTO getInfo(@RequestParam("id") String url ){
+	public YoutubeDTO getInfo(@RequestParam("url") String url ){
 		return youtubeService.getVideoInfo(url);
 	}
 	
 
+	@ResponseBody
+	@PostMapping("/getLiveList")
+	public List<YoutubeDTO> getLiveList(@RequestParam("channelId") String channelId){
+		return youtubeService.getLiveList(channelId);
+	}
 }

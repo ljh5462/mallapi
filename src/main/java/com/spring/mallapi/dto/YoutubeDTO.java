@@ -22,8 +22,8 @@ public class YoutubeDTO {
 	private String channelId; // 채널 id
 	private String channelTitle; // 채널명
 	private String duration; // 영상 길이
-	private String kind; // 영상 종류
-	private String liveBroadcastContent; // 현재 방송 상태
+	private String kind; // 영상 종류(video, shorts, live, shorts live)
+	private String liveBroadcastContent; // 현재 방송 상태(live, none)
 	private Thumbnail thumbnail; // 썸네일 정보(maxres)
 	private String actualStartTime; // 방송시작시간
 	private String actualEndTime; // 방송종료시간
