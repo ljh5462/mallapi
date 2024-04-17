@@ -3,8 +3,6 @@ package com.spring.mallapi.service;
 import java.io.IOException;
 import java.util.List;
 
-import org.mortbay.log.Log;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +22,8 @@ import com.google.api.services.youtube.model.VideoSnippet;
 import com.spring.mallapi.dto.YoutubeDTO;
 import com.spring.mallapi.util.CustomTimeConvert;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -45,8 +45,14 @@ public class YoutubeServiceImpl implements YoutubeService{
 	
 	// id로 동영상 정보 조회
 	@Override
-	public YoutubeDTO getVideoInfo(String id){
+	public YoutubeDTO getVideoInfo(String url){
+		
 		try{
+			
+			VideoInfo videoInfo = extractVideoId(url); // url 형식인 경우 id 추출, url로 쇼츠여부 확인
+			String vid = videoInfo.getVideoId();
+			boolean isShorts = videoInfo.isShorts();
+			
             youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, new HttpRequestInitializer() {
                 public void initialize(HttpRequest request) throws IOException {}
             }).setApplicationName("youtube-cmdline-search-sample").build();
@@ -56,13 +62,17 @@ public class YoutubeServiceImpl implements YoutubeService{
             videos.setKey(apiKey);
             videos.setPart("snippet,liveStreamingDetails,contentDetails");
             videos.setRegionCode("kr");
-            videos.setId(id);
+            videos.setId(vid);
 
             VideoListResponse videoResponse = videos.execute();
             List<Video> videoList = videoResponse.getItems();
             
             if(!videoList.isEmpty()) {
             	String kind = "video";
+            	
+            	if(isShorts) {
+            		kind = "shorts";
+            	}
             	
             	Video v = videoList.get(0);
             	VideoSnippet vs = v.getSnippet();
@@ -73,7 +83,12 @@ public class YoutubeServiceImpl implements YoutubeService{
         		DateTime scheduledStartTime = null;
             	
             	if(vl != null) {
-            		kind = "live";
+            		if(isShorts) {
+            			kind += " live";
+            		}
+            		else {
+            			kind = "live";            			
+            		}
             		actualStartTime = vl.getActualStartTime();
             		actualEndTime = vl.getActualEndTime();
             		scheduledStartTime = vl.getScheduledStartTime();
@@ -93,6 +108,7 @@ public class YoutubeServiceImpl implements YoutubeService{
 	            	.actualEndTime(actualEndTime != null ? customTimeConvert.convertTimestampToCurrentDate(actualEndTime) : "")
 	            	.scheduledStartTime(scheduledStartTime != null ? customTimeConvert.convertTimestampToCurrentDate(scheduledStartTime) : "")
 	            	.thumbnail(vs.getThumbnails().getMaxres())
+	            	.tags(vs.getTags())
 	            	.build();
             	return youtubeDTO;
             }
@@ -113,4 +129,37 @@ public class YoutubeServiceImpl implements YoutubeService{
 
         return null;
 	}
+	
+	//url로 동영상 id 추출, 쇼츠여부 확인(url로 받을경우만)
+	public static VideoInfo extractVideoId(String videoUrl) {
+		
+		String videoId = null;
+        boolean isShorts = false;
+		
+		// Split the URL by "/", and get the last part
+        String[] parts = videoUrl.split("/");
+        String lastPart = parts[parts.length - 1];
+
+        // If the last part contains a "?" (indicating query parameters), split it by "?" and get the first part
+        if (lastPart.contains("?")) {
+            String[] subParts = lastPart.split("\\?");
+            videoId = subParts[0];
+        } else {
+            videoId = lastPart;
+        }
+        
+        // Check if the URL contains "shorts"
+        if (videoUrl.contains("shorts")) {
+            isShorts = true;
+        }
+
+        return new VideoInfo(videoId, isShorts);
+	}
+	
+	@AllArgsConstructor
+	@Getter
+	public static class VideoInfo {
+        private String videoId;
+        private boolean isShorts;
+    }
 }
