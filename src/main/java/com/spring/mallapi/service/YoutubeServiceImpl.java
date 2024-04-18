@@ -103,7 +103,7 @@ public class YoutubeServiceImpl implements YoutubeService{
 
 				String kind = "video";
 
-				if(title.contains("#shorts")){
+				if(title.contains("#shorts") || isShorts){
 					isShorts = true;
 					kind = "shorts";
 				}
